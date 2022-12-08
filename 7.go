@@ -52,7 +52,7 @@ func main() {
 			currentDir = navigate(currentDir, name)
 			continue
 		}
-		if match, _ := regexp.Match("^dir", []byte(text)); match {
+		if match, _ := regexp.Match(`^dir`, []byte(text)); match {
 			name := parseDirLine(text)
 			currentDir = addSubdir(currentDir, name)
 			continue
