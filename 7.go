@@ -24,7 +24,7 @@ type Dir struct {
 var resultMap = map[string]int{}
 
 func main() {
-	readFile, _ := os.Open("7_input.txt")
+	readFile, _ := os.Open("7_input_s.txt")
 	fileScanner := bufio.NewScanner(readFile)
 	fileScanner.Split(bufio.ScanLines)
 
@@ -35,11 +35,8 @@ func main() {
 	}
 	currentDir := root
 
-	line := 1
 	for fileScanner.Scan() {
 		text := fileScanner.Text()
-		line++
-		fmt.Println(line)
 		if match, _ := regexp.Match(`^\$ ls`, []byte(text)); match {
 			continue
 		}
@@ -103,7 +100,6 @@ func addFile(dir *Dir, name string, size int) *Dir {
 
 func addSubdir(dir *Dir, name string) *Dir {
 	if _, exists := dir.subdirs[name]; exists {
-		fmt.Println("Dir Exists!!!!")
 		return dir
 	}
 	newDir := &Dir{
@@ -112,10 +108,7 @@ func addSubdir(dir *Dir, name string) *Dir {
 		subdirs: map[string]*Dir{},
 		parent:  dir,
 	}
-	fmt.Println(dir.subdirs)
-	if newDir == nil {
-		fmt.Println("NEw Dir NIL!!!!!!")
-	}
+
 	dir.subdirs[name] = newDir
 	return dir
 }
