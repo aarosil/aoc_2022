@@ -128,8 +128,3 @@ func calculateTotalDirSize(dir *Dir) int {
 	}
 	return result
 }
-
-func accumulateDiskTotal(dir *Dir) int {
-	result := 0
-	return result
-}
