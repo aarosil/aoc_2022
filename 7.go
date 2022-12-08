@@ -24,7 +24,7 @@ type Dir struct {
 var resultMap = map[string]int{}
 
 func main() {
-	readFile, _ := os.Open("7_input_s.txt")
+	readFile, _ := os.Open("7_input.txt")
 	fileScanner := bufio.NewScanner(readFile)
 	fileScanner.Split(bufio.ScanLines)
 
