@@ -42,7 +42,7 @@ func main() {
 		}
 		if match, _ := regexp.Match(`^\$ cd`, []byte(text)); match {
 			name := parseNavigateLine(text)
-			if currentDir.name == name {
+			if currentDir.name == name && name == "/" {
 				continue
 			}
 			if name == ".." {
