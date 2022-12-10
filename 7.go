@@ -22,6 +22,8 @@ type Dir struct {
 }
 
 var resultMap = map[string]int{}
+var diskCapacity = 70000000
+var updateSize = 30000000
 
 func main() {
 	readFile, _ := os.Open("7_input.txt")
@@ -63,13 +65,20 @@ func main() {
 
 	}
 
-	calculateTotalDirSize(root)
 	result := 0
+	rootSize := calculateTotalDirSize(root, 0)
+	freeSpace := diskCapacity - rootSize
+	spaceNeeded := updateSize - freeSpace
+	fmt.Println("needed: ", spaceNeeded)
+	// result := 0
 
-	for _, v := range resultMap {
-		result += v
-	}
-	fmt.Println(result, resultMap)
+	// for _, v := range resultMap {
+	// 	result += v
+	// }
+	// fmt.Println(result, resultMap)
+	calculateTotalDirSize(root, spaceNeeded)
+	fmt.Println(resultMap)
+	fmt.Println(result)
 }
 
 func parseFileLine(text string) (string, int) {
@@ -113,17 +122,17 @@ func addSubdir(dir *Dir, name string) *Dir {
 	return dir
 }
 
-func calculateTotalDirSize(dir *Dir) int {
+func calculateTotalDirSize(dir *Dir, saveSize int) int {
 	result := 0
 	for _, size := range dir.files {
 		result += size
 	}
 
 	for _, subdir := range dir.subdirs {
-		result += calculateTotalDirSize(subdir)
+		result += calculateTotalDirSize(subdir, saveSize)
 	}
 
-	if result < 100000 {
+	if result > saveSize && saveSize > 0 {
 		resultMap[dir.name] = result
 	}
 	return result
