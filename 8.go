@@ -9,6 +9,7 @@ import (
 )
 
 var grid = [][]int{}
+var visibleCount int
 
 func init() {
 	fmt.Println("AoC Day 8")
@@ -23,6 +24,35 @@ func main() {
 		text := fileScanner.Text()
 		grid = append(grid, parseRow(text))
 	}
+
+	for y, row := range grid {
+		for x, height := range row {
+			if isVisible(height, x, y) {
+				visibleCount++
+			}
+		}
+	}
+
+	fmt.Println(visibleCount)
+}
+
+func isVisible(height, x, y int) bool {
+	if x == 0 ||
+		y == 0 ||
+		x == len(grid[0])-1 ||
+		y == len(grid)-1 {
+		return true
+	}
+	fmt.Println(x, y, height)
+
+	if checkVizNorth(height, x, y, grid) ||
+		checkVizSouth(height, x, y, grid) ||
+		checkVizEast(height, x, y, grid) ||
+		checkVizWest(height, x, y, grid) {
+		return true
+	}
+
+	return false
 }
 
 func parseRow(text string) []int {
@@ -35,28 +65,42 @@ func parseRow(text string) []int {
 	return result
 }
 
-func onEdge(x, y int) bool {
-	if x == 0 || x == len(grid[0]) {
-		return true
+func checkVizNorth(height, x, y int, grid [][]int) bool {
+	for yPos := 0; yPos < y; yPos++ {
+		if grid[yPos][x] >= height {
+			return false
+		}
 	}
-	if y == 0 || y == len(grid) {
-		return true
+	fmt.Println("visible from north")
+	return true
+}
+
+func checkVizSouth(height, x, y int, grid [][]int) bool {
+	for yPos := y + 1; yPos < len(grid); yPos++ {
+		if grid[yPos][x] >= height {
+			return false
+		}
 	}
-	return false
+	fmt.Println("visible from south")
+	return true
 }
 
-func checkVizNorth(x, y int) bool {
-	return false
+func checkVizEast(height, x, y int, grid [][]int) bool {
+	for xPos := 0; xPos < x; xPos++ {
+		if grid[y][xPos] >= height {
+			return false
+		}
+	}
+	fmt.Println("visible from east")
+	return true
 }
 
-func checkVizSouth(x, y int) bool {
-	return false
-}
-
-func checkVizEast(x, y int) bool {
-	return false
-}
-
-func checkVizWest(x, y int) bool {
-	return false
+func checkVizWest(height, x, y int, grid [][]int) bool {
+	for xPos := x + 1; xPos < len(grid[0]); xPos++ {
+		if grid[y][xPos] >= height {
+			return false
+		}
+	}
+	fmt.Println("visible from west")
+	return true
 }
