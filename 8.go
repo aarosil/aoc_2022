@@ -10,6 +10,7 @@ import (
 
 var grid = [][]int{}
 var visibleCount int
+var highestSceneScore int
 
 func init() {
 	fmt.Println("AoC Day 8")
@@ -30,10 +31,18 @@ func main() {
 			if isVisible(height, x, y) {
 				visibleCount++
 			}
+			sceneScore := getSceneScore(x, y)
+			if sceneScore > highestSceneScore {
+				highestSceneScore = sceneScore
+			}
 		}
 	}
 
 	fmt.Println(visibleCount)
+}
+
+func getSceneScore(x, y int) int {
+	return 0
 }
 
 func isVisible(height, x, y int) bool {
