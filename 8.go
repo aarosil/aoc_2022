@@ -10,7 +10,7 @@ import (
 
 var grid = [][]int{}
 var visibleCount int
-var highestSceneScore int
+var highestScenicScore int
 
 func init() {
 	fmt.Println("AoC Day 8")
@@ -31,28 +31,88 @@ func main() {
 			if isVisible(height, x, y) {
 				visibleCount++
 			}
-			sceneScore := getSceneScore(x, y)
-			if sceneScore > highestSceneScore {
-				highestSceneScore = sceneScore
+			scenicScore := getScenicScore(height, x, y)
+			if scenicScore > highestScenicScore {
+				highestScenicScore = scenicScore
 			}
 		}
 	}
 
 	fmt.Println(visibleCount)
+	fmt.Println(highestScenicScore)
 }
 
-func getSceneScore(x, y int) int {
-	return 0
+func getScenicScore(height, x, y int) int {
+	if onEdge(x, y) {
+		return 0
+	}
+
+	north := getScenicScoreNorth(height, x, y)
+	south := getScenicScoreSouth(height, x, y)
+	east := getScenicScoreEast(height, x, y)
+	west := getScenicScoreWest(height, x, y)
+
+	return north * south * east * west
+}
+
+func getScenicScoreNorth(height, x, y int) int {
+	score := 0
+	for yPos := y - 1; yPos >= 0; yPos-- {
+		score += 1
+		if grid[yPos][x] >= height {
+			return score
+		}
+	}
+
+	return score
+}
+
+func getScenicScoreSouth(height, x, y int) int {
+	score := 0
+	for yPos := y + 1; yPos < len(grid); yPos++ {
+		score += 1
+		if grid[yPos][x] >= height {
+			return score
+		}
+	}
+
+	return score
+}
+
+func getScenicScoreEast(height, x, y int) int {
+	score := 0
+	for xPos := x - 1; xPos >= 0; xPos-- {
+		score += 1
+		if grid[y][xPos] >= height {
+			return score
+		}
+	}
+
+	return score
+}
+
+func getScenicScoreWest(height, x, y int) int {
+	score := 0
+	for xPos := x + 1; xPos < len(grid[0]); xPos++ {
+		score += 1
+		if grid[y][xPos] >= height {
+			return score
+		}
+	}
+	return score
+}
+
+func onEdge(x, y int) bool {
+	return x == 0 ||
+		y == 0 ||
+		x == len(grid[0])-1 ||
+		y == len(grid)-1
 }
 
 func isVisible(height, x, y int) bool {
-	if x == 0 ||
-		y == 0 ||
-		x == len(grid[0])-1 ||
-		y == len(grid)-1 {
+	if onEdge(x, y) {
 		return true
 	}
-	fmt.Println(x, y, height)
 
 	if checkVizNorth(height, x, y, grid) ||
 		checkVizSouth(height, x, y, grid) ||
@@ -80,7 +140,6 @@ func checkVizNorth(height, x, y int, grid [][]int) bool {
 			return false
 		}
 	}
-	fmt.Println("visible from north")
 	return true
 }
 
@@ -90,7 +149,6 @@ func checkVizSouth(height, x, y int, grid [][]int) bool {
 			return false
 		}
 	}
-	fmt.Println("visible from south")
 	return true
 }
 
@@ -100,7 +158,6 @@ func checkVizEast(height, x, y int, grid [][]int) bool {
 			return false
 		}
 	}
-	fmt.Println("visible from east")
 	return true
 }
 
@@ -110,6 +167,5 @@ func checkVizWest(height, x, y int, grid [][]int) bool {
 			return false
 		}
 	}
-	fmt.Println("visible from west")
 	return true
 }
